@@ -15,7 +15,6 @@ def index():
     return 'lol', 300
 
 
-
 @app.route('/status/<float:state>')
 def status(state):
     if state == 'learn':
