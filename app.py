@@ -1,4 +1,7 @@
-from flask import Flask
+from flask import Flask, request, render_template
+
+# for localhost (sets secret values)
+import set_env_values
 
 app = Flask(__name__)
 
@@ -12,7 +15,7 @@ def page_not_found(e):
 
 @app.route('/')
 def index():
-    return 'lol', 300
+    return render_template('index.html')
 
 
 @app.route('/status/<float:state>')
@@ -26,4 +29,4 @@ def status(state):
 
 
 if __name__ == '__main__':
-    app.run(port=5123, debug=True)
+    app.run(debug=True)
