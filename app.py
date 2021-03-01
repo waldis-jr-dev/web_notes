@@ -1,32 +1,26 @@
-from flask import Flask, request, render_template
-
-# for localhost (sets secret values)
-import set_env_values
+from flask import Flask, request, render_template, redirect
+from security.jwt_check import jwt_check
+import os
 
 app = Flask(__name__)
 
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return {
-        "message": "Request method does not exist. "
-    }, 404
+    return redirect('/')
 
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
 
 
-@app.route('/status/<float:state>')
-def status(state):
-    if state == 'learn':
-        return 'PPC BORING'
-    if state == 'play':
-        return 'VERY VERY GREAT SUPER NICE'
-    else:
-        return 'HZ'
+@app.route('/login', methods=['POST'])
+def login():
+    print(request.args)
+    return 'Hmm ..'
 
 
 if __name__ == '__main__':
+    import set_env_values
     app.run(debug=True)

@@ -2,8 +2,8 @@ CREATE TABLE "Users" (
 	"user_id" serial NOT NULL,
 	"email" TEXT NOT NULL UNIQUE,
 	"password" TEXT NOT NULL,
-	"role_id" integer NOT NULL,
-	"is_active" BOOLEAN NOT NULL DEFAULT 'False',
+	"role_id" integer NOT NULL DEFAULT '1',
+	"is_active" BOOLEAN NOT NULL DEFAULT 'True',
 	CONSTRAINT "Users_pk" PRIMARY KEY ("user_id")
 ) WITH (
   OIDS=FALSE

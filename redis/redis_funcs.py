@@ -1,8 +1,5 @@
-import os
 import redis
 from abc import ABC, abstractmethod
-# for localhost (sets secret values)
-import set_env_values
 
 
 class AbstractRedis(ABC):
@@ -20,5 +17,7 @@ class Redis(AbstractRedis):
 
 
 if __name__ == '__main__':
+    import os
+    import set_env_values
     redis = Redis(os.getenv('REDIS_URL'))
     redis.all_keys()
