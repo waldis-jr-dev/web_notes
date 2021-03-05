@@ -15,10 +15,10 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['POST', 'GET'])
 def login():
     print(request.args)
-    return 'Hmm ..'
+    return render_template('login.html')
 
 
 if __name__ == '__main__':

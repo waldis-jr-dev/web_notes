@@ -15,18 +15,13 @@
     <link rel="stylesheet" href="../static/css/main.css">
 </head>
 <body class="body">
-    <h1>Web Notes</h1><br>
-
-    <form action="/login" method="get" name="login" id="login" onsubmit="">
-        <h4><label for="login">If you are already in our system :</label></h4>
-        <input type="submit" value="Login">
+    <h1 class="h1">Hi !</h1>
+    <form action="/login" method="post" name="log_in" id="log_in" onsubmit="">
+                    <label for="log_in">Email:</label><br>
+                    <input type="email" maxlength="80" size="25" id="username" name="username"><br>
+                    <label for="email">Password:</label><br>
+                    <input type="password" maxlength="80" size="25" id="password" name="password"><br><br>
+                    <input type="submit" name="submit" value="Login">
     </form>
-    <br>
-    <form action="/register" method="get" name="register" id="register" onsubmit="">
-        <h4><label for="register">If you want to create a new free account :</label></h4>
-        <input type="submit" value="Register">
-    </form>
-    <br>
-    <h5>Free <a href="https://github.com/waldis-jr-dev/web_notes" target="_blank">Open Source project</a></h5>
 </body>
 </html>
