@@ -17,8 +17,11 @@ def index():
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
-    print(request.args)
-    return render_template('login.html')
+    if request.method == 'GET':
+        print(request.args)
+        return render_template('login.html')
+    if request.method == 'POST':
+        return request.form
 
 
 if __name__ == '__main__':
