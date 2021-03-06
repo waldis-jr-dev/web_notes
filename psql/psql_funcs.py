@@ -135,20 +135,20 @@ class Psql(AbstractPsql):
                     }
 
     def get_user_by_email(self, email: str) -> Dict[str, bool]:
-        sql = f'''SELECT user_id, email, password, role_id, is_active FROM "Users" WHERE email="{email}"'''
+        sql = f"""SELECT user_id, email, password, role_id, is_active FROM "Users" WHERE email = '{email}'"""
         self.cursor.execute(sql)
         psql_resp = self.cursor.fetchone()
-        if len(psql_resp) == 0:
+        if not psql_resp:
             return {'result': False,
                     'message': 'no user with this email'
                     }
         else:
             return {'result': True,
                     'message': 'user found successfully',
-                    'user': User(psql_resp[0][0],
-                                 psql_resp[0][1],
-                                 psql_resp[0][2],
-                                 psql_resp[0][3])
+                    'user': User(psql_resp[0],
+                                 psql_resp[1],
+                                 psql_resp[2],
+                                 psql_resp[3])
                     }
 
     def add_note(self, to_user_id: int, note: str) -> Dict[str, bool]:
@@ -170,6 +170,29 @@ class Psql(AbstractPsql):
                                     to_user_id,
                                     self.cursor.fetchone()[1],
                                     note)
+                    }
+
+    def find_notes(self, user_id: int, note_part: str = None) -> Dict[str, bool]:
+        sql = f"""SELECT note_id, user_id, date, note FROM "Notes" WHERE user_id = {user_id} AND note LIKE '%{note_part}%'"""
+        if not note_part:
+            sql = f"""SELECT note_id, user_id, date, note FROM "Notes" WHERE user_id = {user_id}"""
+        self.cursor.execute(sql)
+        psql_resp = self.cursor.fetchall()
+        if not psql_resp:
+            return {'result': False,
+                    'message': 'no notes with this parameters'
+                    }
+        else:
+            notes = []
+            for note in psql_resp:
+                notes.append(Note(note[0],
+                                  note[1],
+                                  note[2],
+                                  note[3]))
+
+            return {'result': True,
+                    'message': 'user found successfully',
+                    'user': notes
                     }
 
     def edit_note(self, note_id: int, new_note: str) -> Dict[str, bool]:
@@ -219,6 +242,6 @@ if __name__ == '__main__':
     import os
     psql = Psql(os.getenv('DATABASE_URL'))
 
-    print(psql.get_user_by_email('test'))
+    print(psql.find_note(1))
 
     psql.close_connection()

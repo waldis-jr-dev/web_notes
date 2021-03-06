@@ -1,7 +1,7 @@
 import smtplib
 from typing import Dict
 from abc import ABC, abstractmethod
-import mail_generator
+from mail import mail_generator
 
 
 class AbstractMail(ABC):
