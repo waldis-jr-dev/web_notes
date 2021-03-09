@@ -66,4 +66,4 @@ if __name__ == '__main__':
 
     redis = Redis(os.getenv('REDIS_URL'))
 
-    print(redis.delete_token('3.1615064334.bad_token'))
+    print(redis.all_keys())

@@ -68,6 +68,7 @@ def jwt_check(function):
                 return login_redirect()
         else:
             return login_redirect()
+
     return wrapper
 
 
@@ -75,7 +76,6 @@ def jwt_check(function):
 def login():
     if request.method == 'POST':
         if 'password' in request.form and 'email' in request.form:
-            print(request.form)
             psql_resp = psql.get_user_by_email(request.form['email'])
             if psql_resp['result']:
                 user = psql_resp['user']
@@ -89,10 +89,13 @@ def login():
                     return render_template('login.html', data='incorrect password')
             if not psql_resp['result']:
                 return redirect('/register')
+    if request.method == 'GET':
+        if 'session_token' in request.cookies and jwt.check_token(request.cookies['session_token']):
+            return redirect('/home')
     return render_template('login.html')
 
 
-@app.route('/logout', methods=['GET'])
+@app.route('/logout', methods=['POST'])
 @jwt_check
 def logout():
     decoded_jwt = jwt.decode_token(request.cookies['session_token'])['decoded_token']
@@ -104,7 +107,7 @@ def logout():
 @jwt_check
 def home():
     decoded_jwt = jwt.decode_token(request.cookies['session_token'])
-    return str(psql.find_notes(decoded_jwt['decoded_token']['user_id']))
+    return render_template('home.html', user_notes=psql.find_notes(decoded_jwt['decoded_token']['user_id']))
 
 
 if __name__ == '__main__':
