@@ -5,25 +5,17 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Web Notes home page</title>
-	<meta name="description" content="Free Web Notes. From Waldis Jr." />
+    <title>Web Notes login</title>
+	<meta name="description" content="Free Web Notes. Developed by Waldis Jr." />
 	<meta name="keywords" content="web, notes, web-notes, waldis, jr, Waldis, Jr, waldis_jr, Grynovetskyy, Vladyslav"/>
 	<meta name="author" content="Waldis Jr"/>
 
 	<link rel="shortcut icon" href="../static/img/favicon.ico">
 
-    <link rel="stylesheet" href="../static/css/home.css">
+    <link rel="stylesheet" href="../static/css/login.css">
 </head>
 <body class="body">
-    {% if user_notes['result'] %}
-        {% for note in user_notes['user_notes'] %}
-            <h4>{{note}}</h4>
-        {% endfor %}
-    {% else %}
-        <h4>No notes</h4>
-    {% endif %}
-    <form action="/logout" method="post" name="logout" id="logout" onsubmit="">
-        <input type="submit" value="Logout">
-    </form>
+    <h1>Web Notes</h1><br>
+
 </body>
 </html>

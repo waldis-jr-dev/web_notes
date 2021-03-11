@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Web Notes registration</title>
+</head>
+<body>
+    {% if redirect_from_login: %}
+        <h4>Unfortunately you are not our user yet.  <br>
+            But tou can create free account right now !</h4>
+    {% endif %}
+    <form action="/registration" method="post" name="login" id="login" onsubmit="">
+                    <label for="email">Email:</label><br>
+                    <input type="email" maxlength="80" size="25" id="email" name="email"><br><br>
+                    <input type="submit" value="Send registration link">
+    </form>
+
+</body>
+</html>

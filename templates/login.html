@@ -18,6 +18,10 @@
     {% if data == 'incorrect password'%}
         <h1>Welcome back !</h1>
         <h5>Incorrect email or password.<br>Please try again !</h5>
+    {% elif data == 'blocked'%}
+        <h1>Welcome back !</h1>
+        <h5>To many tries !<br>Please retry in 1 minute.</h5>
+
     {% else %}
         <h1>Welcome back !</h1>
     {% endif %}
@@ -25,9 +29,10 @@
                     <label for="email">Email:</label><br><br>
                     <input type="email" maxlength="80" size="25" id="email" name="email"><br><br>
                     <label for="password">Password:</label><br><br>
-                    <input type="password" maxlength="80" size="25" id="password" name="password"><br><br>
+                    <input type="password" maxlength="80" size="25" id="password" name="password">
+                    <h5><a href="/forgot_password">Forgot password ?</a></h5><br><br>
                     <label for="time">Select period of time you want to be logged in <br>
-                        (you can logout any time) :</label><br>
+                        (you can logout at any time) :</label><br>
                      <p><select name="time_period" id="time" required>
                       <option>1 hour</option>
                       <option selected>1 day</option>

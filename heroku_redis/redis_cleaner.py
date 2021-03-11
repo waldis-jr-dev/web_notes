@@ -10,3 +10,4 @@ redis.delete_old_tokens()
 
 if __name__ == '__main__':
     print(redis.all_keys())
+    print(len(redis.all_keys()))

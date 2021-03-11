@@ -67,3 +67,4 @@ if __name__ == '__main__':
     redis = Redis(os.getenv('REDIS_URL'))
 
     print(redis.all_keys())
+    print(len(redis.all_keys()))

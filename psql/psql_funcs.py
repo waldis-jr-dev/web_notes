@@ -191,8 +191,8 @@ class Psql(AbstractPsql):
                                   note[3]))
 
             return {'result': True,
-                    'message': 'user found successfully',
-                    'user': notes
+                    'message': 'user notes found successfully',
+                    'user_notes': notes
                     }
 
     def edit_note(self, note_id: int, new_note: str) -> Dict[str, bool]:

@@ -72,27 +72,58 @@ def jwt_check(function):
     return wrapper
 
 
+@app.route('/registration', methods=['POST', 'GET'])
+def registration():
+    if request.method == 'POST':
+        return render_template('registration_link.html')
+    else:
+        if 'from' in request.values and request.values['from'] == 'login':
+            return render_template('registration.html', redirect_from_login=True)
+        else:
+            return render_template('registration.html')
+
+
+@app.route('/forgot_password', methods=['POST', 'GET'])
+def forgot_password():
+    if request.method == 'POST':
+        pass
+    else:
+        return render_template('forgot_password.html')
+
+
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
         if 'password' in request.form and 'email' in request.form:
             psql_resp = psql.get_user_by_email(request.form['email'])
             if psql_resp['result']:
-                user = psql_resp['user']
-                pass_check_resp = pchek.check_password_hash(user.password, request.form['password'])
-                if pass_check_resp:
-                    flask_resp = make_response(redirect('/home'))
-                    flask_resp.set_cookie('session_token',
-                                          jwt.create_token(user.user_id, generate_ttl(request.form['time_period'])))
-                    return flask_resp
-                if not pass_check_resp:
-                    return render_template('login.html', data='incorrect password')
+                pass
             if not psql_resp['result']:
-                return redirect('/register')
-    if request.method == 'GET':
-        if 'session_token' in request.cookies and jwt.check_token(request.cookies['session_token']):
-            return redirect('/home')
-    return render_template('login.html')
+                return redirect('/registration?from=login')
+    else:
+        return render_template('login.html')
+
+
+
+    # if request.method == 'POST':
+    #     if 'password' in request.form and 'email' in request.form:
+    #         psql_resp = psql.get_user_by_email(request.form['email'])
+    #         if psql_resp['result']:
+    #             user = psql_resp['user']
+    #             pass_check_resp = pchek.check_password_hash(user.password, request.form['password'])
+    #             if pass_check_resp:
+    #                 flask_resp = make_response(redirect('/home'))
+    #                 flask_resp.set_cookie('session_token',
+    #                                       jwt.create_token(user.user_id, generate_ttl(request.form['time_period'])))
+    #                 return flask_resp
+    #             if not pass_check_resp:
+    #                 return render_template('login.html', data='blocked')
+    #         if not psql_resp['result']:
+    #             return redirect('/register')
+    # if request.method == 'GET':
+    #     if 'session_token' in request.cookies and jwt.check_token(request.cookies['session_token']):
+    #         return redirect('/home')
+    # return render_template('login.html')
 
 
 @app.route('/logout', methods=['POST'])
