@@ -34,8 +34,8 @@ def index():
     return render_template('index.html')
 
 
-def login_redirect():
-    flask_resp = make_response(redirect('/login'))
+def login_redirect(return_to: str = '/home'):
+    flask_resp = make_response(redirect(f"/login?return_to={return_to}"))
     flask_resp.set_cookie('session_token', expires=0)
     return flask_resp
 
@@ -63,19 +63,19 @@ def jwt_check(function):
                 if redis_resp:
                     return function(*args, **kwargs)
                 else:
-                    return login_redirect()
+                    return login_redirect(request.url_rule)
             else:
-                return login_redirect()
+                return login_redirect(request.url_rule)
         else:
-            return login_redirect()
-
+            return login_redirect(request.url_rule)
     return wrapper
 
 
 @app.route('/registration', methods=['POST', 'GET'])
 def registration():
     if request.method == 'POST':
-        return render_template('registration_link.html')
+
+        return render_template('registration_link_was_sent.html', user_email=request.form.get('email'))
     else:
         if 'from' in request.values and request.values['from'] == 'login':
             return render_template('registration.html', redirect_from_login=True)
@@ -97,14 +97,24 @@ def login():
         if 'password' in request.form and 'email' in request.form:
             psql_resp = psql.get_user_by_email(request.form['email'])
             if psql_resp['result']:
-                pass
+                user = psql_resp['user']
+                pass_check_resp = pchek.check_password_hash(user.password, request.form['password'])
+                if pass_check_resp:
+                    flask_resp = make_response(redirect(f"{request.form.get('return_to')}"))
+                    flask_resp.set_cookie('session_token',
+                                          jwt.create_token(user.user_id, generate_ttl(request.form['time_period'])))
+                    return flask_resp
+                if not pass_check_resp:
+                    return render_template('login.html', data='blocked')
             if not psql_resp['result']:
                 return redirect('/registration?from=login')
-    else:
-        return render_template('login.html')
+    if request.method == 'GET':
+        if 'return_to' in request.args:
+            return render_template('login.html', return_to=request.args['return_to'])
+        if 'session_token' in request.cookies and jwt.check_token(request.cookies['session_token']):
+            return redirect('/home')
 
-
-
+    return render_template('login.html', return_to='home')
     # if request.method == 'POST':
     #     if 'password' in request.form and 'email' in request.form:
     #         psql_resp = psql.get_user_by_email(request.form['email'])
@@ -139,6 +149,12 @@ def logout():
 def home():
     decoded_jwt = jwt.decode_token(request.cookies['session_token'])
     return render_template('home.html', user_notes=psql.find_notes(decoded_jwt['decoded_token']['user_id']))
+
+
+@app.route('/profile', methods=['GET'])
+@jwt_check
+def profile():
+    return 'Profile'
 
 
 if __name__ == '__main__':

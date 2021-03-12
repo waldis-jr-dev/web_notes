@@ -15,7 +15,10 @@
     <link rel="stylesheet" href="../static/css/login.css">
 </head>
 <body class="body">
-    <h1>Web Notes</h1><br>
-
+    {% if user_email %}
+        <p>We sent a werification link to {{user_email}}. <br> It will expired in two minutes.</p>
+    {% else %}
+        <p>Something went wrong please try again</p>
+    {% endif %}
 </body>
 </html>
