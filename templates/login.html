@@ -5,7 +5,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Web Notes</title>
+    <title>Web Notes Login</title>
 	<meta name="description" content="Free Web Notes. From Waldis Jr." />
 	<meta name="keywords" content="web, notes, web-notes, waldis, jr, Waldis, Jr, waldis_jr, Grynovetskyy, Vladyslav"/>
 	<meta name="author" content="Waldis Jr"/>
@@ -13,52 +13,74 @@
 	<link rel="shortcut icon" href="../static/img/favicon.ico">
 
     <link rel="stylesheet" href="../static/css/login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
 </head>
 <body class="body">
     {% if data == 'incorrect password'%}
-        <h1>Welcome back !</h1>
-        <h5>Incorrect email or password.<br>Please try again !</h5>
+        <div class="info">
+            <h1>Welcome back !</h1>
+        </div>
+        <div class="message">
+            <h5>Incorrect email or password.<br>Please try again !</h5>
+        </div>
     {% elif data == 'blocked'%}
-        <h1>Welcome back !</h1>
-        <h5>To many tries !<br>Please retry in 1 minute.</h5>
-
+        <div class="info">
+            <h1>Welcome back !</h1>
+        </div>
+        <div class="message">
+            <h5>To many tries !<br>Please retry in 1 minute.</h5>
+        </div>
     {% else %}
-        <h1>Welcome back !</h1>
+        <div class="info">
+            <h1>Welcome back !</h1>
+        </div>
     {% endif %}
-    <form action="/login" method="post" name="login" id="login" onsubmit="">
-                    <label for="email">Email:</label><br><br>
-                    <input required type="email" maxlength="80" size="25" id="email" name="email"><br><br>
-                    <label for="password">Password:</label><br><br>
-                    <div class="password">
-	                    <input type="password" id="password" placeholder="Введите пароль" name="password">
-	                    <input type="checkbox" onclick="myFunction()">Show Password
-                    </div>
-                    <h5><a href="/forgot_password">Forgot password ?</a></h5><br><br>
-                    <label for="time">Select period of time you want to be logged in <br>
-                        (you can logout at any time) :</label><br>
-                     <p><select name="time_period" id="time" required>
-                      <option>1 hour</option>
-                      <option selected>1 day</option>
-                      <option>3 days</option>
-                      <option>1 week</option>
-                     </select></p><br>
-                    <input type="hidden" id="return_to" name=return_to
-                           value="{% if return_to %}{{return_to}}{% else %}/home{% endif %}">
 
-                    <input type="submit" value="Login"><br><br>
-                     <h5><a href="/registration">Not our user yet ? Register !</a></h5>
-    </form>
+    <div class="login-form">
+        <form action="/login" method="post" name="login-form" id="login-form">
+            <div class="email">
+                <label for="email">Email:</label><br>
+                <input required type="email" maxlength="80" size="25" id="email" name="email"
+                       placeholder="Enter the email">
+            </div>
 
-    <script>
-        function myFunction() {
-    var x = document.getElementById("myInput");
-    if (x.type === "password") {
-        x.type = "text";
-    } else {
-        x.type = "password";
-    }
-}
-    </script>
+            <div class="password">
+                <label for="password">Password:</label><br>
+                <input type="password" name="password" id="password" placeholder="Enter the password">
+                <i class="far fa-eye" id="togglePassword"></i>
+            </div>
+
+            <div class="forgot-password">
+                <h5><a href="/forgot_password">Forgot password ?</a></h5>
+            </div>
+
+            <div class="ttl">
+                <label for="time">Select period of time you want to be logged in <br>
+                                        (you can logout at any time) :</label>
+                <div class="time-period">
+                    <select name="time_period" id="time" required>
+                     <option>1 hour</option>
+                     <option selected>1 day</option>
+                     <option>3 days</option>
+                     <option>1 week</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="return_to">
+                 <input type="hidden" id="return_to" name="return_to"
+                        value="{% if return_to %}{{return_to}}{% else %}/home{% endif %}">
+            </div>
+
+            <div class="submit">
+                <p><input type="submit" value="Login"></p>
+            </div>
+        </form>
+    </div>
+    <div class="not-registered">
+        <h5><a href="/registration">Not our user yet ? Register !</a></h5>
+    </div>
+    <script src="../static/js/login_form.js"></script>
 </body>
 </html>
 

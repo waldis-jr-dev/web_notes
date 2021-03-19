@@ -6,15 +6,36 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Web Notes registration</title>
+    <meta name="description" content="Free Web Notes. From Waldis Jr." />
+	<meta name="keywords" content="web, notes, web-notes, waldis, jr, Waldis, Jr, waldis_jr, Grynovetskyy, Vladyslav"/>
+	<meta name="author" content="Waldis Jr"/>
+
+	<link rel="shortcut icon" href="../static/img/favicon.ico">
 </head>
 <body>
     {% if redirect_from_login: %}
-        <h4>Unfortunately you are not our user yet.  <br>
-            But you can create free account right now !</h4>
+        <div class="info">
+            <h4>
+                Unfortunately you are not our user yet.  <br>
+                But you can create free account right now !
+            </h4>
+        </div>
+    {% else %}
+        <div class="info">
+            <h4>Registration</h4>
+        </div>
     {% endif %}
+    <div class="message">
+        <p>
+            Enter your email please, we need It to add you in our system.
+        </p>
+    </div>
     <form action="/registration" method="post" name="login" id="login" onsubmit="">
-                    <label for="email">Email:</label><br>
-                    <input required type="email" maxlength="80" size="25" id="email" name="email"><br><br>
+        <div class="email">
+            <label for="email">Email:</label><br>
+            <input required type="email" maxlength="80" size="25" id="email" name="email"
+                       placeholder="Enter the email">
+        </div>
                     <input type="submit" value="Send registration link">
     </form>
 

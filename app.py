@@ -137,7 +137,9 @@ def home():
 @jwt_check
 def profile():
     decoded_jwt = jwt.decode_token(request.cookies['session_token'])['decoded_token']
-    return 'Profile'
+    user = psql.get_user_by_id(decoded_jwt['user_id'])
+    user_role = psql.get_role_by_id(user.role_id)
+    return render_template('profile.html', user=user, user_role=user_role)
 
 
 if __name__ == '__main__':

@@ -151,6 +151,15 @@ class Psql(AbstractPsql):
                                  psql_resp[3])
                     }
 
+    def get_user_by_id(self, user_id: int) -> User:
+        sql = f"""SELECT user_id, email, password, role_id, is_active FROM "Users" WHERE user_id = '{user_id}'"""
+        self.cursor.execute(sql)
+        psql_resp = self.cursor.fetchone()
+        return User(psql_resp[0],
+                    psql_resp[1],
+                    psql_resp[2],
+                    psql_resp[3])
+
     def add_note(self, to_user_id: int, note: str) -> Dict[str, bool]:
         sql = f'''INSERT INTO "Notes" (user_id, date, note) 
                 VALUES ('{to_user_id}', {int(time.time())}, '{note}') RETURNING note_id, date'''
@@ -235,6 +244,12 @@ class Psql(AbstractPsql):
         return {'result': True,
                 'message': 'connection closed successfully'
                 }
+
+    def get_role_by_id(self, role_id: int) -> str:
+        sql = f"""SELECT role_name FROM "Roles" WHERE role_id = '{role_id}'"""
+        self.cursor.execute(sql)
+        psql_resp = self.cursor.fetchone()
+        return psql_resp[0]
 
 
 if __name__ == '__main__':
