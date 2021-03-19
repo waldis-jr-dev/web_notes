@@ -12,10 +12,14 @@
 
 	<link rel="shortcut icon" href="../static/img/favicon.ico">
 
-    <link rel="stylesheet" href="../static/css/login.css">
+    <link rel="stylesheet" href="../static/css/main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
 </head>
-<body>
+<body class="body">
+    <div class="home-button">
+        <button name="login" type="button" onclick="location.href='/home'">Back to main page</button>
+    </div>
+    <br><br>
     {{user}} <br> {{user_role}}
 </body>
 </html>

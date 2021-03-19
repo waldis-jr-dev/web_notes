@@ -126,16 +126,34 @@ def logout():
     return login_redirect()
 
 
-@app.route('/home', methods=['GET'])
+@app.route('/home', methods=['GET', 'POST'])
 @jwt_check
 def home():
     decoded_jwt = jwt.decode_token(request.cookies['session_token'])
     return render_template('home.html', user_notes=psql.find_notes(decoded_jwt['decoded_token']['user_id']))
 
 
-@app.route('/profile', methods=['GET'])
+@app.route('/profile', methods=['GET', 'POST'])
 @jwt_check
 def profile():
+    decoded_jwt = jwt.decode_token(request.cookies['session_token'])['decoded_token']
+    user = psql.get_user_by_id(decoded_jwt['user_id'])
+    user_role = psql.get_role_by_id(user.role_id)
+    return render_template('profile.html', user=user, user_role=user_role)
+
+
+@app.route('/update_password', methods=['POST'])
+@jwt_check
+def update_password():
+    decoded_jwt = jwt.decode_token(request.cookies['session_token'])['decoded_token']
+    user = psql.get_user_by_id(decoded_jwt['user_id'])
+
+    return 'jbkb'
+
+
+@app.route('/create_note', methods=['GET', 'POST'])
+@jwt_check
+def create_note():
     decoded_jwt = jwt.decode_token(request.cookies['session_token'])['decoded_token']
     user = psql.get_user_by_id(decoded_jwt['user_id'])
     user_role = psql.get_role_by_id(user.role_id)

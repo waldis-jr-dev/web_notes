@@ -11,8 +11,9 @@
 	<meta name="author" content="Waldis Jr"/>
 
 	<link rel="shortcut icon" href="../static/img/favicon.ico">
+    <link rel="stylesheet" href="../static/css/main.css">
 </head>
-<body>
+<body class="body">
     {% if redirect_from_login: %}
         <div class="info">
             <h4>
@@ -36,7 +37,9 @@
             <input required type="email" maxlength="80" size="25" id="email" name="email"
                        placeholder="Enter the email">
         </div>
-                    <input type="submit" value="Send registration link">
+        <p><div class="send-registration-link-button">
+            <input type="submit" value="Send registration link">
+        </div></p>
     </form>
 
 </body>

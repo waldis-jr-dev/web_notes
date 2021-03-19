@@ -11,19 +11,43 @@
 	<meta name="author" content="Waldis Jr"/>
 
 	<link rel="shortcut icon" href="../static/img/favicon.ico">
-
-    <link rel="stylesheet" href="../static/css/home.css">
+    <link rel="stylesheet" href="../static/css/main.css">
 </head>
 <body class="body">
+    <div class="profile-button">
+        <button name="login" type="button" onclick="location.href='/profile'">My profile</button>
+    </div>
+    <div class="logout-button">
+        <form action="/logout" method="post" name="logout" id="logout">
+            <input type="submit" value="Logout">
+        </form>
+    </div>
+    <br><br>
+    <div class="new-note-button">
+        <button name="login" type="button" onclick="location.href='/new_note'">Create new note</button>
+    </div>
+    <div class="find-notes">
+        <form action="/home" method="post" name="note-search" id="note-search">
+            <p><label for="note-search">Search by part of note:</label></p>
+            <input type="search" for="note-search" id="note_part">
+            <input type="submit" value="Search">
+        </form>
+    </div>
+    {% if search_task %}
+        <div class="search-result">
+            <h4>All your notes that contain "{{search_task}}"</h4>
+        </div>
+    {% endif %}
     {% if user_notes['result'] %}
         {% for note in user_notes['user_notes'] %}
-            <h4>{{note}}</h4>
+            <div class="note">
+                <h4>{{note}}</h4>
+            </div>
         {% endfor %}
     {% else %}
-        <h4>No notes</h4>
+        <div class="info">
+            <h4>No notes yet</h4>
+        </div>
     {% endif %}
-    <form action="/logout" method="post" name="logout" id="logout" onsubmit="">
-        <input type="submit" value="Logout">
-    </form>
 </body>
 </html>
