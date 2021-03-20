@@ -104,7 +104,7 @@ def sec_registration(key):
         else:
             return render_template('registration_step_2.html', user_email=str(user_email))
     else:
-        return redirect('registration')
+        return redirect(url_for('registration'))
 
 
 @app.route('/forgot_password', methods=['POST', 'GET'])
