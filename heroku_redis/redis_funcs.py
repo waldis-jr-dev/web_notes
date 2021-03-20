@@ -62,6 +62,7 @@ if __name__ == '__main__':
     print(redis.all_keys())
     print(len(redis.all_keys()))
     # for i in redis.all_keys():
-    #     if 'bad_token' in i.decode('UTF-8'):
+    #     # if 'bad_token' in i.decode('UTF-8'):
+    #     if len(i.decode('UTF-8')) == 36:
     #         redis.delete_token(i)
     # print(len(redis.all_keys()))

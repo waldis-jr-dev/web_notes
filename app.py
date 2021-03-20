@@ -92,7 +92,7 @@ def registration():
                     return redirect('registration')
             else:
                 key = uuid4()
-                redis.add_token(str(key), request.form['email'])
+                redis.add_token(str(key), f"{request.form['email']};{int(time.time())+120}")
                 mail.send_verification_letter(request.form['email'], f"{request.base_url}/{key}")
                 redis.add_token(request.form['email'], str(int(time.time()) + 120))
                 return render_template('registration_link_was_sent.html', user_email='sent')
@@ -105,12 +105,16 @@ def registration():
 
 @app.route('/registration/<key>', methods=['POST', 'GET'])
 def sec_registration(key):
-    user_email = redis.get_token(key)
-    if user_email:
+    user_email_data = redis.get_token(key)
+    if user_email_data:
+        user_email, user_ttl = user_email_data.decode('UTF-8').split(';')
         if request.method == 'POST' and 'password' in request.form:
-            psql.add_user(user_email.decode('UTF-8'), pchek.generate_password_hash(request.form['password']))
+            psql.add_user(user_email, pchek.generate_password_hash(request.form['password']))
             redis.delete_token(key)
+            redis.delete_token(user_email)
             return render_template('successful_registration.html', user_email=str(user_email))
+        if int(user_ttl) < int(time.time()):
+            return redirect(url_for('registration'))
         else:
             return render_template('registration_step_2.html', user_email=str(user_email))
     else:
