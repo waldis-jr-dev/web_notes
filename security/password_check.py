@@ -29,4 +29,4 @@ class PassChek(AbstractPassCheck):
 if __name__ == '__main__':
     test = PassChek('sha256')
 
-    print(test.generate_password_hash('test'))
+    print(test.generate_password_hash('qwerty'))

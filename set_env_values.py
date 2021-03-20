@@ -1,6 +1,6 @@
 import os
 
-os.environ['REDIS_URL'] = 'redis://:p08ce7b24c40c612465982029feea57eab5fba041270d81d483db5a86e94da580@ec2-52-209-181-184.eu-west-1.compute.amazonaws.com:6379'
+os.environ['REDIS_URL'] = 'redis://:p08ce7b24c40c612465982029feea57eab5fba041270d81d483db5a86e94da580@ec2-54-246-47-8.eu-west-1.compute.amazonaws.com:29799'
 os.environ['DATABASE_URL'] = 'postgres://ishloxfjkhpgyv:3912b9a48f9ecb429b703ab2b5fb33e9c424a9db661c44247eadadaa5ebc83cf@ec2-54-155-87-214.eu-west-1.compute.amazonaws.com:5432/dsbk64ql0huoq'
 os.environ['JWT_ALGORITHM'] = 'HS256'
 os.environ['EMAIL_USER'] = 'noreply@waldisjr.com'

@@ -1,26 +1,47 @@
-<form action="formdata" method="post" name="form1">
- <p><b>Введите текст:</b></p>
- <p><textarea></textarea></p>
- <p><input type="submit" value="Отправить"></p>
-</form>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Web Notes new note</title>
+    <meta name="description" content="Free Web Notes. From Waldis Jr." />
+    <meta name="keywords" content="web, notes, web-notes, waldis, jr, Waldis, Jr, waldis_jr, Grynovetskyy, Vladyslav"/>
+    <meta name="author" content="Waldis Jr"/>
 
+    <link rel="shortcut icon" href="../static/img/favicon.ico">
+    <link rel="stylesheet" href="../static/css/main.css">
 
-
-<form action="formdata" method="post" name="form1">
- <p><b>Введите текст:</b></p>
- <p><textarea name="text1" rows="3" cols="10" maxlength="35"></textarea></p>
- <p><input type="submit" value="Отправить"></p>
-</form>
-
-<form action="formdata" method="post" name="form1">
- <p><textarea name="text1" placeholder="Введите текст"></textarea></p>
- <p><input type="submit" value="Отправить"></p>
-</form>
-
-
-<form action="formdata" method="post" name="form1">
- <p><b>Введите текст:</b></p>
- <p><textarea name="text1" required></textarea></p>
- <p><input type="submit" value="Отправить"></p>
-</form>
-
+    <script>
+        // TODO
+    </script>
+</head>
+<body class="body">
+    <div class="home-button">
+        <button name="home" type="button" onclick="location.href='/home'">Back to main page</button>
+    </div>
+    <div class="info">
+        <h1>Create new note</h1>
+    </div>
+    <div class="new-note">
+        <form action="/create_note" method="post" name="new-note" id="new-note">
+            <div class="message">
+                <p><label for="new-note">Enter note text :<br>(up to 1000 characters)</label></p>
+            </div>
+            <div class="textarea">
+                <textarea required
+                          name="note_text"
+                          placeholder="Type here wathever you want .."
+                          rows="10"
+                          cols="25"
+                          maxlength="1000"
+                          form="new-note"></textarea>
+            </div>
+            <div class="submit">
+                <p><input type="submit" value="Create note"></p>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

@@ -8,6 +8,8 @@ from mail.smtp import Mail
 from security.password_check import PassChek
 from log.logger import Logger
 
+from uuid import uuid4
+
 if __name__ == '__main__':
     import set_env_values
 
@@ -70,13 +72,20 @@ def jwt_check(function):
                 return login_redirect(request.url_rule)
         else:
             return login_redirect(request.url_rule)
+
     return wrapper
 
 
 @app.route('/registration', methods=['POST', 'GET'])
 def registration():
     if request.method == 'POST':
-        return render_template('registration_link_was_sent.html', user_email=request.form.get('email'))
+        if 'email' in request.form:
+            if psql.get_user_by_email(request.form['email'])['result']:
+                return redirect('login')
+            else:
+                key = uuid4()
+                mail.send_verification_letter(request.form['email'], f"{request.base_url}/{key}")
+                return render_template('registration_link_was_sent.html', user_email=request.form.get('email'))
     else:
         if 'from' in request.values and request.values['from'] == 'login':
             return render_template('registration.html', redirect_from_login=True)
@@ -84,10 +93,16 @@ def registration():
             return render_template('registration.html')
 
 
+@app.route('/registration/<key>', methods=['POST', 'GET'])
+def sec_registration(key):
+    print(key)
+    return 'Reg 2 step'
+
+
 @app.route('/forgot_password', methods=['POST', 'GET'])
 def forgot_password():
     if request.method == 'POST':
-        pass
+        return render_template('forgot_password_sent.html')
     else:
         return render_template('forgot_password.html')
 
@@ -129,8 +144,12 @@ def logout():
 @app.route('/home', methods=['GET', 'POST'])
 @jwt_check
 def home():
-    decoded_jwt = jwt.decode_token(request.cookies['session_token'])
-    return render_template('home.html', user_notes=psql.find_notes(decoded_jwt['decoded_token']['user_id']))
+    if request.method == 'POST':
+        print(request.form)
+        return ''
+    else:
+        decoded_jwt = jwt.decode_token(request.cookies['session_token'])
+        return render_template('home.html', user_notes=psql.find_notes(decoded_jwt['decoded_token']['user_id']))
 
 
 @app.route('/profile', methods=['GET', 'POST'])
@@ -145,19 +164,32 @@ def profile():
 @app.route('/update_password', methods=['POST'])
 @jwt_check
 def update_password():
-    decoded_jwt = jwt.decode_token(request.cookies['session_token'])['decoded_token']
-    user = psql.get_user_by_id(decoded_jwt['user_id'])
-
-    return 'jbkb'
+    print(request.form)
+    if 'password' in request.form and 'new_password' in request.form and 'user_role' in request.form:
+        decoded_jwt = jwt.decode_token(request.cookies['session_token'])['decoded_token']
+        user = psql.get_user_by_id(decoded_jwt['user_id'])
+        if pchek.check_password_hash(user.password, request.form['password']):
+            psql.change_user_password(decoded_jwt['user_id'],
+                                      pchek.generate_password_hash(request.form['new_password']))
+            return render_template('profile.html', user=user, user_role=request.form['user_role'],
+                                   message='password_updated')
+        if user.password != request.form['password']:
+            return render_template('profile.html', user=user, user_role=request.form['user_role'],
+                                   message='wrong_password')
+    else:
+        return redirect(url_for('profile'))
 
 
 @app.route('/create_note', methods=['GET', 'POST'])
 @jwt_check
 def create_note():
-    decoded_jwt = jwt.decode_token(request.cookies['session_token'])['decoded_token']
-    user = psql.get_user_by_id(decoded_jwt['user_id'])
-    user_role = psql.get_role_by_id(user.role_id)
-    return render_template('profile.html', user=user, user_role=user_role)
+    if request.method == 'POST':
+        decoded_jwt = jwt.decode_token(request.cookies['session_token'])['decoded_token']
+        if 'note_text' in request.form and len(request.form['note_text']) < 1001:
+            psql.add_note(decoded_jwt['user_id'], request.form['note_text'])
+            return render_template('note_created.html')
+    else:
+        return render_template('new_note.html')
 
 
 if __name__ == '__main__':

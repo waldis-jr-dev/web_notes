@@ -118,7 +118,7 @@ class Psql(AbstractPsql):
                     }
 
     def change_user_password(self, user_id: int, new_password: str) -> Dict[str, bool]:
-        sql = f'''UPDATE "Users" SET password = {new_password} WHERE user_id={user_id}'''
+        sql = f'''UPDATE "Users" SET password = '{new_password}' WHERE user_id={user_id}'''
         try:
             self.cursor.execute(sql)
         # TODO
@@ -173,11 +173,12 @@ class Psql(AbstractPsql):
             raise e
         else:
             self.psql.commit()
+            note_fields = self.cursor.fetchall()[0]
             return {'result': True,
                     'message': 'note added successfully',
-                    'note_id': Note(self.cursor.fetchone()[0],
+                    'note_id': Note(note_fields[0],
                                     to_user_id,
-                                    self.cursor.fetchone()[1],
+                                    note_fields[1],
                                     note)
                     }
 
