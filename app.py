@@ -98,8 +98,8 @@ def sec_registration(key):
     user_email = redis.get_token(key)
     if user_email:
         if request.method == 'POST' and 'password' in request.form:
-            print()
             psql.add_user(user_email.decode('UTF-8'), pchek.generate_password_hash(request.form['password']))
+            redis.delete_token(key)
             return render_template('successful_registration.html', user_email=str(user_email))
         else:
             return render_template('registration_step_2.html', user_email=str(user_email))
