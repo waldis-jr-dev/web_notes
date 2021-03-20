@@ -82,7 +82,7 @@ def registration():
         if 'email' in request.form:
             if psql.get_user_by_email(request.form['email'])['result']:
                 return redirect('login')
-            email_ttl = redis.get_token(request.form['email'])
+            email_ttl = redis.get_token(f"{request.form['email']}.registration")
             if email_ttl:
                 if int(email_ttl) > int(time.time()):
                     return render_template('registration_link_was_sent.html', user_email='already_sent',
@@ -92,9 +92,9 @@ def registration():
                     return redirect('registration')
             else:
                 key = uuid4()
-                redis.add_token(str(key), f"{request.form['email']};{int(time.time())+120}")
+                redis.add_token(str(key), f"{request.form['email']};{int(time.time())+120};registration")
                 mail.send_verification_letter(request.form['email'], f"{request.base_url}/{key}")
-                redis.add_token(request.form['email'], str(int(time.time()) + 120))
+                redis.add_token(f"{request.form['email']}.registration", str(int(time.time()) + 120))
                 return render_template('registration_link_was_sent.html', user_email='sent')
     else:
         if 'from' in request.values and request.values['from'] == 'login':
@@ -107,16 +107,19 @@ def registration():
 def sec_registration(key):
     user_email_data = redis.get_token(key)
     if user_email_data:
-        user_email, user_ttl = user_email_data.decode('UTF-8').split(';')
-        if request.method == 'POST' and 'password' in request.form:
-            psql.add_user(user_email, pchek.generate_password_hash(request.form['password']))
-            redis.delete_token(key)
-            redis.delete_token(user_email)
-            return render_template('successful_registration.html', user_email=str(user_email))
-        if int(user_ttl) < int(time.time()):
-            return redirect(url_for('registration'))
+        user_email, user_ttl, act_type = user_email_data.decode('UTF-8').split(';')
+        if act_type == 'registration':
+            if request.method == 'POST' and 'password' in request.form:
+                psql.add_user(user_email, pchek.generate_password_hash(request.form['password']))
+                redis.delete_token(key)
+                redis.delete_token(f"{user_email}.registration")
+                return render_template('successful_registration.html', user_email=str(user_email))
+            if int(user_ttl) < int(time.time()):
+                return redirect(url_for('registration'))
+            else:
+                return render_template('registration_step_2.html', user_email=str(user_email))
         else:
-            return render_template('registration_step_2.html', user_email=str(user_email))
+            return redirect(url_for('registration'))
     else:
         return redirect(url_for('registration'))
 
