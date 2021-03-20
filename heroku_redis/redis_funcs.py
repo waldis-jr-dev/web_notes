@@ -49,7 +49,7 @@ class Redis(AbstractRedis):
     def delete_old_tokens(self):
         for key in self.redis.keys():
             key_as_str = str(key, encoding='UTF-8').split('.')
-            if len(key_as_str) == 3 and int(key_as_str[1]) < int(time.time()):
+            if len(key_as_str) == 2 and int(key_as_str[1]) < int(time.time()):
                 self.redis.delete(key)
 
 
@@ -61,3 +61,7 @@ if __name__ == '__main__':
 
     print(redis.all_keys())
     print(len(redis.all_keys()))
+    # for i in redis.all_keys():
+    #     if 'bad_token' in i.decode('UTF-8'):
+    #         redis.delete_token(i)
+    # print(len(redis.all_keys()))
