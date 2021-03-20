@@ -18,11 +18,17 @@
     <div class="info">
         <h4>Registration</h4>
     </div>
-    {% if user_email %}
+    {% if user_email == 'sent' %}
         <div class="message">
             <b>Check your inbox for the next steps.</b><br>
             If you don't receive an email,
-                and it's not in your spam folder this could mean you signed up with a different address.
+                and it's not in your spam folder this could mean you signed up with a different address.<br>
+            <b>It will expire in 2 minutes.</b>
+        </div>
+    {% elif user_email == 'already_sent' %}
+        <div class="message">
+            <b>Verification email already sent.</b><br>
+            If you don't receive an email, you can resend your request in <b>{{time}}</b> seconds<br>
         </div>
     {% else %}
         <div class="message">

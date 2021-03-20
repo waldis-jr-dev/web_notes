@@ -9,6 +9,7 @@ from security.password_check import PassChek
 from log.logger import Logger
 
 from uuid import uuid4
+import time
 
 if __name__ == '__main__':
     import set_env_values
@@ -81,11 +82,20 @@ def registration():
         if 'email' in request.form:
             if psql.get_user_by_email(request.form['email'])['result']:
                 return redirect('login')
+            email_ttl = redis.get_token(request.form['email'])
+            if email_ttl:
+                if int(email_ttl) > int(time.time()):
+                    return render_template('registration_link_was_sent.html', user_email='already_sent',
+                                           time=int(email_ttl) - int(time.time()))
+                if int(email_ttl) <= int(time.time()):
+                    redis.delete_token(request.form['email'])
+                    return redirect('registration')
             else:
                 key = uuid4()
                 redis.add_token(str(key), request.form['email'])
                 mail.send_verification_letter(request.form['email'], f"{request.base_url}/{key}")
-                return render_template('registration_link_was_sent.html', user_email=request.form.get('email'))
+                redis.add_token(request.form['email'], str(int(time.time()) + 120))
+                return render_template('registration_link_was_sent.html', user_email='sent')
     else:
         if 'from' in request.values and request.values['from'] == 'login':
             return render_template('registration.html', redirect_from_login=True)
