@@ -10,11 +10,11 @@ class AbstractRedis(ABC):
         pass
 
     @abstractmethod
-    def add_bad_token(self, encoded_token: dict, token: str) -> Dict[str, bool]:
+    def add_token(self, encoded_token: dict, token: str) -> Dict[str, bool]:
         pass
 
     @abstractmethod
-    def check_token(self, encoded_token: dict, token: str) -> Dict[str, bool]:
+    def get_token(self, encoded_token: dict, token: str) -> Dict[str, bool]:
         pass
 
     @abstractmethod
@@ -29,29 +29,22 @@ class Redis(AbstractRedis):
     def all_keys(self):
         return self.redis.keys()
 
-    def delete_token(self, token_key):
-        return self.redis.delete(token_key)
-
-    def add_bad_token(self, decoded_token: dict, token: str) -> Dict[str, bool]:
-        redis_key = f"{decoded_token['user_id']}.{decoded_token['ttl']}.bad_token"
-        redis_resp = self.redis.set(redis_key, token)
+    def add_token(self, key: str, value: str) -> Dict[str, bool]:
+        redis_resp = self.redis.set(key, value)
         if redis_resp:
             return {'result': True,
-                    'message': 'bad token added successfully'
+                    'message': 'token added successfully'
                     }
         else:
             return {'result': False,
                     'message': 'sth goes wrong'
                     }
 
-    def check_token(self, decoded_token: dict, token: str) -> Dict[str, bool]:
-        redis_key = f"{decoded_token['user_id']}.{decoded_token['ttl']}.bad_token"
-        redis_resp = self.redis.get(redis_key)
-        if not redis_resp:
-            return True
-        redis_resp_as_str = str(redis_resp, encoding='UTF-8')
-        if redis_resp or redis_resp_as_str == token:
-            return False
+    def delete_token(self, token_key):
+        return self.redis.delete(token_key)
+
+    def get_token(self, key: str) -> str:
+        return self.redis.get(key)
 
     def delete_old_tokens(self):
         for key in self.redis.keys():

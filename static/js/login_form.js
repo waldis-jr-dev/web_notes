@@ -19,3 +19,4 @@ newtogglePassword.addEventListener('click', function (e) {
     // toggle the eye slash icon
     this.classList.toggle('fa-eye-slash');
 });
+

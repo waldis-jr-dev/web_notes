@@ -61,10 +61,9 @@ def jwt_check(function):
         if 'session_token' in request.cookies:
             jwt_resp = jwt.check_token(request.cookies['session_token'])
             if jwt_resp:
-                decoded_token = jwt.decode_token(request.cookies['session_token'])
-                redis_resp = redis.check_token(decoded_token['decoded_token'],
-                                               request.cookies['session_token'])
-                if redis_resp:
+                decoded_jwt = jwt.decode_token(request.cookies['session_token'])['decoded_token']
+                redis_resp = redis.get_token(f"{decoded_jwt['user_id']}.{decoded_jwt['ttl']}")
+                if redis_resp is None:
                     return function(*args, **kwargs)
                 else:
                     return login_redirect(request.url_rule)
@@ -84,6 +83,7 @@ def registration():
                 return redirect('login')
             else:
                 key = uuid4()
+                redis.add_token(str(key), request.form['email'])
                 mail.send_verification_letter(request.form['email'], f"{request.base_url}/{key}")
                 return render_template('registration_link_was_sent.html', user_email=request.form.get('email'))
     else:
@@ -95,8 +95,16 @@ def registration():
 
 @app.route('/registration/<key>', methods=['POST', 'GET'])
 def sec_registration(key):
-    print(key)
-    return 'Reg 2 step'
+    user_email = redis.get_token(key)
+    if user_email:
+        if request.method == 'POST' and 'password' in request.form:
+            print()
+            psql.add_user(user_email.decode('UTF-8'), pchek.generate_password_hash(request.form['password']))
+            return render_template('successful_registration.html', user_email=str(user_email))
+        else:
+            return render_template('registration_step_2.html', user_email=str(user_email))
+    else:
+        return redirect('registration')
 
 
 @app.route('/forgot_password', methods=['POST', 'GET'])
@@ -137,7 +145,7 @@ def login():
 @jwt_check
 def logout():
     decoded_jwt = jwt.decode_token(request.cookies['session_token'])['decoded_token']
-    redis.add_bad_token(decoded_jwt, request.cookies['session_token'])
+    redis.add_token(f"{decoded_jwt['user_id']}.{decoded_jwt['ttl']}", 'bad_token')
     return login_redirect()
 
 
