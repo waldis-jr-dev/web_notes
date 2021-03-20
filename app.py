@@ -145,7 +145,6 @@ def logout():
 @jwt_check
 def home():
     if request.method == 'POST':
-        print(request.form)
         return ''
     else:
         decoded_jwt = jwt.decode_token(request.cookies['session_token'])
@@ -164,7 +163,6 @@ def profile():
 @app.route('/update_password', methods=['POST'])
 @jwt_check
 def update_password():
-    print(request.form)
     if 'password' in request.form and 'new_password' in request.form and 'user_role' in request.form:
         decoded_jwt = jwt.decode_token(request.cookies['session_token'])['decoded_token']
         user = psql.get_user_by_id(decoded_jwt['user_id'])
