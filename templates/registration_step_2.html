@@ -24,20 +24,27 @@
     <div class="password-form">
         <form action="#" method="post" name="password-form" id="password-form">
             <p><div class="password">
-                <label for="password">Curent password:</label><br>
+                <label for="password">Password:</label><br>
                 <input required type="password" name="password" id="password" placeholder="Enter the password">
                 <i class="far fa-eye" id="togglePassword"></i>
             </div></p>
             <p><div class="password">
                 <label for="password">Confirm password:</label><br>
-                <input required type="password" name="confirmed_password" id="confirmed_password"
+                <input required type="password" name="passwordConfirm" id="passwordConfirm"
                        placeholder="Enter the password">
+                <span id='message'></span>
             </div></p>
-
             <div class="submit">
-                <p><input type="submit" value="Create account"></p>
+                <p><input id="submit" type="submit" name="submit" value="Create account"></p>
             </div>
         </form>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'>
+        </script>
+    <script src='//cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/jquery.validate.js'>
+        </script>
+    <script src="//cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js">
+        </script>
+    <script src="../static/js/password_confirm.js"></script>
     <script src="../static/js/login_form.js"></script>
 </body>
 </html>

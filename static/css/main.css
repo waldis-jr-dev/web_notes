@@ -14,3 +14,15 @@
 .logout-button {
     margin-left: 60%;
 }
+
+.message {
+    color: blue;
+}
+
+.info {
+    color: green;
+}
+
+.wrong-message {
+    color: red;
+}

@@ -20,14 +20,14 @@
         <div class="info">
             <h1>Welcome back !</h1>
         </div>
-        <div class="message">
+        <div class="wrong-message">
             <h5>Incorrect email or password.<br>Please try again !</h5>
         </div>
     {% elif data == 'blocked'%}
         <div class="info">
             <h1>Welcome back !</h1>
         </div>
-        <div class="message">
+        <div class="wrong-message">
             <h5>To many tries !<br>Please retry in 1 minute.</h5>
         </div>
     {% else %}
@@ -73,7 +73,7 @@
             </div>
 
             <div class="submit">
-                <p><input type="submit" value="Login"></p>
+                <p><input id="submit" type="submit" name="submit" value="Login"></p>
             </div>
         </form>
     </div>

@@ -88,7 +88,7 @@ def registration():
                     return render_template('registration_link_was_sent.html', user_email='already_sent',
                                            time=int(email_ttl) - int(time.time()))
                 if int(email_ttl) <= int(time.time()):
-                    redis.delete_token(request.form['email'])
+                    redis.delete_token(f"{request.form['email']}.registration")
                     return redirect('registration')
             else:
                 key = uuid4()
