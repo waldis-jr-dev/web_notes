@@ -29,13 +29,13 @@
     <div class="info">
         <h4>Your status : <b>{{user_role}}</b></h4>
     </div>
+    <br>
     <div class="password-form">
         <form action="/update_password" method="post" name="password-form" id="password-form">
             <div class="user_role">
                  <input type="hidden" id="user_role" name="user_role"
                         value="{{user_role}}">
             </div>
-
             <div class="message">
                 <h4>Update password</h4>
             </div>

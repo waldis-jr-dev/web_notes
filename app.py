@@ -208,9 +208,13 @@ def update_password():
 def create_note():
     if request.method == 'POST':
         decoded_jwt = jwt.decode_token(request.cookies['session_token'])['decoded_token']
-        if 'note_text' in request.form and len(request.form['note_text']) < 1001:
+        print(len(request.form['note_text']))
+
+        if 'note_text' in request.form and len(request.form['note_text']) <= 1000:
             psql.add_note(decoded_jwt['user_id'], request.form['note_text'])
             return render_template('note_created.html')
+        else:
+            return render_template('new_note.html')
     else:
         return render_template('new_note.html')
 

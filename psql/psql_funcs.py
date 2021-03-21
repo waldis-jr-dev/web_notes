@@ -162,9 +162,9 @@ class Psql(AbstractPsql):
 
     def add_note(self, to_user_id: int, note: str) -> Dict[str, bool]:
         sql = f'''INSERT INTO "Notes" (user_id, date, note) 
-                VALUES ('{to_user_id}', {int(time.time())}, '{note}') RETURNING note_id, date'''
+                VALUES ('{to_user_id}', {int(time.time())}, %s) RETURNING note_id, date'''
         try:
-            self.cursor.execute(sql)
+            self.cursor.execute(sql, (note,))
         except psycopg2.errors.ForeignKeyViolation:
             return {'result': False,
                     'message': 'no user with this id'
