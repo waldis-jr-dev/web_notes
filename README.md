@@ -1,6 +1,6 @@
 # **WJR**
 
-### https://web-notes.waldisjr.com
+### https://web-notes.w-jr.net
 
 
 
